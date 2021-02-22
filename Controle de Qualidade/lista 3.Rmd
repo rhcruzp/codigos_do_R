@@ -1,0 +1,38 @@
+---
+title: "Lista 3 CQ"
+output: html_document
+---
+#Questao 1
+```{r}
+tabela <- read.csv("Tabela.csv",header = T,sep = ";",dec = ",")
+q1 <- read.csv("Q1E3.csv",sep = ";",dec = ",",header = T)
+med <- c()
+dpi <- c()
+for (i in 1:10) {
+  med[i] <- mean(c(q1[i,1],q1[i,2],q1[i,3]))
+  dpi[i] <- sd(c(q1[i,1],q1[i,2],q1[i,3])) 
+}
+r <- 2
+n <- 10
+
+d2 <- tabela$d2[r]
+c4 <- tabela$C4[r]
+dprepe <- mean(med)/d2
+Rx <- max(med)-min(med)
+dprepo <- sqrt((Rx/d2)^2-(dprepe/(n*r))^2)
+dprepe + dprepo
+
+
+RR <- 6*sqrt(dprepe^2 + dprepo^2)
+RR
+
+mean(sqrt(vari))/d2
+
+
+```
+
+#Questao 2
+```{r}
+q2 <- read.csv("Q2E3.csv",sep = ";",dec = ",")
+```
+
