@@ -1,0 +1,168 @@
+---
+title: "Exercicio Controle de qualidade 2"
+output: html_document
+---
+
+```{r}
+PFE <- function(LIE,LSE,MI,DP){
+  return(100*(pnorm(LSE,MI,DP,lower.tail = F)+pnorm(LIE,MI,DP,lower.tail = T)))
+}
+ICP <- function(LIE,LSE,MI,DP){
+  icp <- c()
+  valor <- c()
+  d <- (LIE+LSE)/2
+  CP <- (LSE-LIE)/(6*DP)
+  CPK <- min((LSE-MI)/(3*DP),(MI-LIE)/(3*DP))
+  CPM <- (LSE-LIE)/(6*sqrt((DP^2)+(d-MI)^2))
+  icp <- c("CP","CPK","CPM")
+  valor <- round(c(CP,CPK,CPM),3)
+  resp <-data.frame(icp,valor)
+  return(resp)
+}
+
+alfa <- function(LIC,LSC,DP){
+  x <- mean(c(LIC,LSC))
+  return(pnorm(LIC,a,DP)+pnorm(LSC,a,DP,lower.tail = F))
+}
+```
+
+```{r}
+tabela <- read.csv("Tabela.csv",header = T,sep = ";",dec = ",")
+```
+
+#Questao 1
+```{r}
+xb <- 34.99
+dp <- 0.1101676698
+lie <- 34.745
+lse <- 35.183
+PFE(lie,lse,xb,dp)
+ICP(lie,lse,xb,dp)[2,]
+dp <- 0.1128799
+PFE(lie,lse,xb,dp)
+ICP(lie,lse,xb,dp)[2,]
+
+```
+#Questao 2
+```{r}
+q2 <- read.csv("Questao2 lista 2.csv",header = T,sep = ",",dec = ",")
+n <- 5
+xb <- mean(q2$X)
+rb <- mean(q2$R)
+dp <- rb/tabela$d2[n-1]
+lie <- 131
+lse <- 139
+ICP(lie,lse,xb,dp)[2]
+PFE(lie,lse,xb,dp)
+```
+
+#Questao 3a
+```{r}
+n <- 6
+m <- 30
+Sxb <- 600
+Sdp <-71.4 
+xb <- Sxb/m
+dp <- (Sdp/m)/(tabela$C4[n-1])
+lie <- 10.5
+lse <- 25.5
+PFE(lie,lse,xb,dp)
+ICP(lie,lse,xb,dp)
+
+
+```
+#Questao 3b
+```{r}
+
+```
+
+
+#Questao 4a
+```{r}
+xb <- 1000
+dp <- 2
+lie <- 994
+lse <- 1006
+PFE(lie,lse,xb,dp)
+ICP(lie,lse,xb,dp)[-3,]
+```
+
+#Questao 4b
+```{r}
+xb <- 1002
+dp <- 2
+lie <- 994
+lse <- 1006
+PFE(lie,lse,xb,dp)
+ICP(lie,lse,xb,dp)[-3,]
+```
+
+#Questao 4c
+```{r}
+xb <- 1002
+dp <- 4
+lie <- 994
+lse <- 1006
+PFE(lie,lse,xb,dp)
+ICP(lie,lse,xb,dp)[-3,]
+```
+#Questao 5
+
+#Questao 6
+```{r}
+lie <- 88
+lse <- 112
+Cp <- 1
+Cpm <- 0.8
+dp <- (lse-lie)/(6*Cp)
+delta <- (-200)^2 - (4 * 9991*1)
+xb[1] <- (200-sqrt(delta))/2
+xb[2] <- (200+sqrt(delta))/2
+dp
+xb
+PFE(lie,lse,xb,dp)
+```
+
+#Questao 7
+```{r}
+pfe <- 1.222/100
+lie <- 88
+lse <- 112
+Cpm <- 0.8
+
+k <- qnorm(1-pfe)
+d <- (lie+lse)/2
+c <- 2*d + k*d^2 - ((lse-lie)*k)/(6*Cpm)
+b <- -(2*k*d + 2)
+delta <- b^2 - 4*c
+
+xb[1] <- (-b - sqrt(delta))/2
+xb[2] <- (-b + sqrt(delta))/2
+xb
+dp
+```
+
+#Questao 8
+```{r}
+n <- 4
+lic <- 96.1
+lsc <- 107.84
+dp <- 4
+lie <- 91
+lse <- 115
+xb <- (lic+lsc)/2
+k <- (sqrt(n)/dp) * (xb-lic)
+k1 <- 2.92
+200*pnorm(k1,lower.tail = F)
+PFE(lie,lse,xb,dp)
+ICP(lie,lse,xb,dp)[3,]
+
+
+xb1 <- 104
+delta <- (xb1-xb)/dp
+1 - (pnorm(-k-delta/sqrt(n))+pnorm(-k+delta/sqrt(n)))
+PFE(lie,lse,xb1,dp)
+ICP(lie,lse,xb1,dp)[3,]
+
+```
+
