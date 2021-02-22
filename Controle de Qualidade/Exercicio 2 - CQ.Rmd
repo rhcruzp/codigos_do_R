@@ -19,11 +19,48 @@ ICP <- function(LIE,LSE,MI,DP){
   resp <-data.frame(icp,valor)
   return(resp)
 }
-
-alfa <- function(LIC,LSC,DP){
-  x <- mean(c(LIC,LSC))
-  return(pnorm(LIC,a,DP)+pnorm(LSC,a,DP,lower.tail = F))
+misig <- function(LIE,LSE,CP,CPK,CPM){
+  
+  
+  
+  
+  
+  if(CP==0){
+    d <- (LIE+LSE)/2    
+    x <- c()
+    dp <- c()
+    x1 <- c()
+    x2 <- c()  
+    
+    a1 <- 1/(3*CPK)^2
+    a2 <- 1
+    
+    b1 <- 2*LSE/(3*CPK)^2
+    b2 <- 2 * d
+    
+    c2 <- d^2
+    c1 <- LSE^2/(3*CPK)^2
+    c3 <- ((LSE-LIE)/(6*CPM))^2
+    
+    a <- a1+a2
+    b <- -(b1+b2)
+    c <- c1+c2-c3  
+    delta1 <- b^2-4*a*c
+    
+    x[1] <- (-b - sqrt(delta1))/(2*a)
+    x[2] <- (-b + sqrt(delta1))/(2*a)
+    dp <- (LSE - x)/(3*CPK)
+  }
+  if(CPM ==0 ){
+    
+  }
+  if(CPK==0){
+    
+  }
+  resp <- data.frame(x,dp)
+  return(resp)
 }
+
 ```
 
 ```{r}
@@ -32,8 +69,8 @@ tabela <- read.csv("Tabela.csv",header = T,sep = ";",dec = ",")
 
 #Questao 1
 ```{r}
-xb <- 34.99
-dp <- 0.1101676698
+xb <- 34.994
+dp <- 0.11
 lie <- 34.745
 lse <- 35.183
 PFE(lie,lse,xb,dp)
@@ -50,11 +87,29 @@ n <- 5
 xb <- mean(q2$X)
 rb <- mean(q2$R)
 dp <- rb/tabela$d2[n-1]
+xb
+dp <- 2.02
+
 lie <- 131
 lse <- 139
-ICP(lie,lse,xb,dp)[2]
+ICP(lie,lse,xb,dp)[-3,]
 PFE(lie,lse,xb,dp)
 ```
+
+```{r}
+q2 <- read.csv("Questao2alista 2.csv",header = T,sep = ",",dec = ",")
+n <- 5
+xb <- mean(q2$X)
+rb <- mean(q2$R)
+dp <- rb/tabela$d2[n-1]
+xb
+dp
+lie <- 131
+lse <- 139
+ICP(lie,lse,xb,dp)[-3,]
+PFE(lie,lse,xb,dp)
+```
+
 
 #Questao 3a
 ```{r}
@@ -73,7 +128,7 @@ ICP(lie,lse,xb,dp)
 ```
 #Questao 3b
 ```{r}
-
+(lse-xb)/qnorm(0.01,lower.tail = F)
 ```
 
 
@@ -107,6 +162,14 @@ PFE(lie,lse,xb,dp)
 ICP(lie,lse,xb,dp)[-3,]
 ```
 #Questao 5
+```{r}
+lie <- 12
+lse <- 24
+Cpk <- 0.8
+Cpm <- 0.857
+
+
+```
 
 #Questao 6
 ```{r}
