@@ -12,7 +12,7 @@ for (i in 1:10) {
   med[i] <- mean(c(q1[i,1],q1[i,2],q1[i,3]))
   dpi[i] <- sd(c(q1[i,1],q1[i,2],q1[i,3])) 
 }
-r <- 2
+r <- 3
 n <- 10
 
 d2 <- tabela$d2[r]
@@ -26,7 +26,7 @@ dprepe + dprepo
 RR <- 6*sqrt(dprepe^2 + dprepo^2)
 RR
 
-mean(sqrt(vari))/d2
+mean(sqrt(vari))/c4
 
 
 ```

@@ -223,7 +223,7 @@ lie7 <- 88
 lse7 <- 112
 Cpm7 <- 0.8
 qpfe7 <- qnorm(pfe7)
-misig(lie,lse,0,0,Cpm7,qpfe7)
+misig(lie7,lse7,0,0,Cpm7,qpfe7)
 ```
 ```{r}
 d7 <- (lie7+lse7)/2
