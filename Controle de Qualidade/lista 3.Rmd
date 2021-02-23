@@ -22,11 +22,24 @@ ASM <- function(n,r,o,banco,d2){
   sigmed <- dprepe + dprepo 
   VT <- var(c(q1$M1,q1$M2,q1$M3))
   sigproc <- VT - sigmed^2
-  ReR <- 6*sigmed 
-  PReR <- (100*ReR)/(6*sqrt(VT)) 
- }
-  
+  ReR <- 6 * sigmed 
+  PReR <- (100 * ReR)/(6 * sqrt(VT)) 
   resp <- list("sid medicao" = sigmed^2, "sig processo" = sigproc, "R&R" = ReR, "%R&R" = PReR)
+ }
+  if(o>1){
+    sigrepe <- mean(banco[,2])/d23
+    Rx <- max(banco[,1])-min(banco[,1])
+    a <- (Rx/d2)^2
+    b <- (sigrepe^2)/(n * r)
+    sigrepo <- sqrt(a - b)
+    sigmed <-sigrepe+sigrepo
+    ReR <- 6 * sigmed 
+    Pt <- ReR * 100/(LSE - LIE)
+    esp <- list("sid medicao" = sigmed^2,  "R&R" = ReR, "PT" =  Pt)
+    
+  }
+  
+  
   return(resp)
   }
 
@@ -37,6 +50,7 @@ ASM <- function(n,r,o,banco,d2){
 ```{r}
 tabela <- read.csv("Tabela.csv",header = T,sep = ";",dec = ",")
 q1 <- read.csv("Q1E3.csv",sep = ";",dec = ",",header = T)
+q1 <- as.matrix(q1)
 n1 <- 10 ##quantidade de objetos medidos
 r1 <- 3 ##quantidade de vezes que cada objeto 'e medido por cada operador
 o1 <- 1 ##numero de operadores
@@ -61,13 +75,14 @@ round(mean(di) + talfa*(sd(di)/sqrt(k)),5)
 #Questao 3
 ```{r}
 Xbb <- c(20.07545,20.07935,20.07140,20.0760)
-Rb <- c(0.0039,0.0017,0.0038,00027)
+Rb <- c(0.0039,0.0017,0.0038,0.0027)
+q3 <- cbind(Xbb,Rb)
 o3 <- 4
 n3 <- 25
 r3 <- 3
 d23 <- tabela$d2[r3-1]
 
-srepemean(Rb)/d23
+
 
 ```
 
