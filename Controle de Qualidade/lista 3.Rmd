@@ -5,44 +5,48 @@ output: html_document
 
 #funcao
 ```{r}
-
-ASM <- function(n,r,o,banco,d2){
+ASM <- function(n,r,o,banco,d2,LSE,LIE,DP){
   med <- c()
   Ri <- c()
-
- if(o == 1){
+  if(o == 1){
     for (i in 1:n1) {
       Ri[i] <- max(banco[i,]) - min(banco[i,])
       med[i] <- sum(banco[i,])/r1
+    }
+    Ri
+    med 
+    sigrepe <- mean(Ri)/d2 
+    sigrepo <- 0
+    sigmed <- sigrepe + sigrepo 
+    VT <- var(c(banco[,1],banco[,2],banco[,3]))
+    sigproc <- VT - sigmed^2
+    ReR <- 6 * sigmed 
+    PReR <- (100 * ReR)/(6 * sqrt(VT)) 
+    if(LIE == 0 && LSE == 0){ Pt <- 0 }
+    else{Pt <- ReR * 100/(LSE - LIE)  }
+    resp <- list("sig repe"=sigrepe ,"sig repo"=sigrepo ,"sig medicao" = sigmed^2, "sig processo" = sigproc, "R&R" = ReR, "%R&R" = PReR,"PT" =  Pt)
   }
-  Ri
-  med 
-  dprepe <- mean(Ri)/d2 
-  dprepo <- 0
-  sigmed <- dprepe + dprepo 
-  VT <- var(c(q1$M1,q1$M2,q1$M3))
-  sigproc <- VT - sigmed^2
-  ReR <- 6 * sigmed 
-  PReR <- (100 * ReR)/(6 * sqrt(VT)) 
-  resp <- list("sid medicao" = sigmed^2, "sig processo" = sigproc, "R&R" = ReR, "%R&R" = PReR)
- }
   if(o>1){
-    sigrepe <- mean(banco[,2])/d23
+    sigrepe <- (sum(banco[,2])/o)/d2
     Rx <- max(banco[,1])-min(banco[,1])
     a <- (Rx/d2)^2
     b <- (sigrepe^2)/(n * r)
     sigrepo <- sqrt(a - b)
     sigmed <-sigrepe+sigrepo
     ReR <- 6 * sigmed 
-    Pt <- ReR * 100/(LSE - LIE)
-    esp <- list("sid medicao" = sigmed^2,  "R&R" = ReR, "PT" =  Pt)
-    
+    if(LIE == 0 && LSE == 0){ Pt <- 0 }
+    else{Pt <- ReR * 100/(LSE - LIE)  }
+    resp <- list("sig repe"=sigrepe ,"sig repo"=sigrepo ,"sid medicao" = sigmed,  "R&R" = ReR, "PT" =  Pt)
+    if(DP!=0){
+      VT <-DP^2
+      sigproc <- VT - sigmed^2
+      PReR <- (100 * ReR)/(6 * sqrt(VT)) 
+      resp <- list("sig repe"=sigrepe ,"sig repo"=sigrepo ,"sid medicao" = sigmed^2, "sig processo" = sigproc, 
+                   "R&R" = ReR, "%R&R" = PReR,"PT" =  Pt)
+    }
   }
-  
-  
   return(resp)
-  }
-
+}
 ```
 
 
@@ -50,14 +54,11 @@ ASM <- function(n,r,o,banco,d2){
 ```{r}
 tabela <- read.csv("Tabela.csv",header = T,sep = ";",dec = ",")
 q1 <- read.csv("Q1E3.csv",sep = ";",dec = ",",header = T)
-q1 <- as.matrix(q1)
 n1 <- 10 ##quantidade de objetos medidos
 r1 <- 3 ##quantidade de vezes que cada objeto 'e medido por cada operador
 o1 <- 1 ##numero de operadores
 d21 <- tabela$d2[r1-1]
-ASM(n1,r1,o1,q1,d21)
-
-   
+ASM(n1,r1,o1,q1,d21,0,0,0)
 ```
 
 #Questao 2
@@ -72,17 +73,63 @@ talfa <- qt(alfa/2,k-1,lower.tail = F)
 round(mean(di) - talfa*(sd(di)/sqrt(k)),5)
 round(mean(di) + talfa*(sd(di)/sqrt(k)),5)
 ```
+
 #Questao 3
 ```{r}
-Xbb <- c(20.07545,20.07935,20.07140,20.0760)
-Rb <- c(0.0039,0.0017,0.0038,0.0027)
-q3 <- cbind(Xbb,Rb)
+Xbb3 <- c(20.07545,20.07935,20.07140,20.07680)
+Rb3 <- c(0.0039,0.0017,0.0038,0.0027)
+q3 <- cbind(Xbb3,Rb3)
 o3 <- 4
 n3 <- 25
 r3 <- 3
 d23 <- tabela$d2[r3-1]
-
+lie3 <- 19.78
+lse3 <- 20.36
+ASM(n3,r3,o3,q3,d23,lse3,lie3,0)
 
 
 ```
+
+#Questao 4
+```{r}
+o4 <- 2
+n4 <- 25
+r4 <- 3
+Xbb4 <- c(35.014,34.993)
+Rb4 <- c(0.19,0.17)
+q4 <- cbind(Xbb4,Rb4)
+lie4 <- 29
+lse4 <- 41
+dp4 <- 0.47
+d24 <- tabela$d2[r4-1]
+
+ASM(n4,r4,o4,q4,d24,lse4,lie4,dp4)
+```
+
+#Questao 5
+```{r}
+q5 <- read.csv("Q5E3.csv",sep = ";",dec = ",",header = T)
+Xbb5 <- c(mean(q5$Xb),mean(q5$Xb.1))
+Rb5 <- c(mean(q5$R),mean(q5$R.1))
+n5 <- 10
+o5 <- 2
+r5 <- 3
+d25 <- tabela$d2[r4-1]
+q5a <- cbind(q5$M11,q5$M12,q5$M13)
+ASM(n5,r5,1,q5a,d25,0,0,0)
+```
+```{r}
+q5b <- cbind(Xbb5,Rb5)
+lie5 <- 22.5
+lse5 <- 37.5
+dp5 <- 1.67
+
+ASM(n5,r5,o5,q5b,d25,lse5,lie5,dp5)
+
+asass <- 2
+
+```
+
+
+
 
