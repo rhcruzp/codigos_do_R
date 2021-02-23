@@ -2,37 +2,72 @@
 title: "Lista 3 CQ"
 output: html_document
 ---
+
+#funcao
+```{r}
+
+ASM <- function(n,r,o,banco,d2){
+  med <- c()
+  Ri <- c()
+
+ if(o == 1){
+    for (i in 1:n1) {
+      Ri[i] <- max(banco[i,]) - min(banco[i,])
+      med[i] <- sum(banco[i,])/r1
+  }
+  Ri
+  med 
+  dprepe <- mean(Ri)/d2 
+  dprepo <- 0
+  sigmed <- dprepe + dprepo 
+  VT <- var(c(q1$M1,q1$M2,q1$M3))
+  sigproc <- VT - sigmed^2
+  ReR <- 6*sigmed 
+  PReR <- (100*ReR)/(6*sqrt(VT)) 
+ }
+  
+  resp <- list("sid medicao" = sigmed^2, "sig processo" = sigproc, "R&R" = ReR, "%R&R" = PReR)
+  return(resp)
+  }
+
+```
+
+
 #Questao 1
 ```{r}
 tabela <- read.csv("Tabela.csv",header = T,sep = ";",dec = ",")
 q1 <- read.csv("Q1E3.csv",sep = ";",dec = ",",header = T)
-med <- c()
-dpi <- c()
-for (i in 1:10) {
-  med[i] <- mean(c(q1[i,1],q1[i,2],q1[i,3]))
-  dpi[i] <- sd(c(q1[i,1],q1[i,2],q1[i,3])) 
-}
-r <- 3
-n <- 10
+n1 <- 10 ##quantidade de objetos medidos
+r1 <- 3 ##quantidade de vezes que cada objeto 'e medido por cada operador
+o1 <- 1 ##numero de operadores
+d21 <- tabela$d2[r1-1]
+ASM(n1,r1,o1,q1,d21)
 
-d2 <- tabela$d2[r]
-c4 <- tabela$C4[r]
-dprepe <- mean(med)/d2
-Rx <- max(med)-min(med)
-dprepo <- sqrt((Rx/d2)^2-(dprepe/(n*r))^2)
-dprepe + dprepo
-
-
-RR <- 6*sqrt(dprepe^2 + dprepo^2)
-RR
-
-mean(sqrt(vari))/c4
-
-
+   
 ```
 
 #Questao 2
 ```{r}
 q2 <- read.csv("Q2E3.csv",sep = ";",dec = ",")
+X <- 20.000
+di <- q2$leitura - X
+mean(di)
+alfa <- 0.05
+k <- length(q2$leitura)
+talfa <- qt(alfa/2,k-1,lower.tail = F)
+round(mean(di) - talfa*(sd(di)/sqrt(k)),5)
+round(mean(di) + talfa*(sd(di)/sqrt(k)),5)
+```
+#Questao 3
+```{r}
+Xbb <- c(20.07545,20.07935,20.07140,20.0760)
+Rb <- c(0.0039,0.0017,0.0038,00027)
+o3 <- 4
+n3 <- 25
+r3 <- 3
+d23 <- tabela$d2[r3-1]
+
+srepemean(Rb)/d23
+
 ```
 
