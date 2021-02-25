@@ -31,17 +31,18 @@ ASM <- function(n,r,o,banco,d2,LSE,LIE,DP){
     Rx <- max(banco[,1])-min(banco[,1])
     a <- (Rx/d2)^2
     b <- (sigrepe^2)/(n * r)
-    sigrepo <- sqrt(a - b)
+    if(a-b<0){sigrepo <- 0}
+    else{sigrepo <- sqrt(a - b)}
     sigmed <-sigrepe+sigrepo
     ReR <- 6 * sigmed 
     if(LIE == 0 && LSE == 0){ Pt <- 0 }
     else{Pt <- ReR * 100/(LSE - LIE)  }
-    resp <- list("sig repe"=sigrepe ,"sig repo"=sigrepo ,"sid medicao" = sigmed,  "R&R" = ReR, "PT" =  Pt)
+    resp <- list("sig repe"=sigrepe ,"sig repo"=sigrepo ,"sig medicao" = sigmed,  "R&R" = ReR, "PT" =  Pt)
     if(DP!=0){
-      VT <-DP^2
-      sigproc <- VT - sigmed^2
+      VT < <- 
+      sigproc <- sqrt(VT - sigmed^2)
       PReR <- (100 * ReR)/(6 * sqrt(VT)) 
-      resp <- list("sig repe"=sigrepe ,"sig repo"=sigrepo ,"sid medicao" = sigmed^2, "sig processo" = sigproc, 
+      resp <- list("sig repe"=sigrepe ,"sig repo"=sigrepo ,"sig medicao" = sigmed, "sig processo" = sigproc, 
                    "R&R" = ReR, "%R&R" = PReR,"PT" =  Pt)
     }
   }
