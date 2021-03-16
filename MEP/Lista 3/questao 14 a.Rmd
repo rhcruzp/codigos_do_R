@@ -1,0 +1,107 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+Questo 14
+funcao
+```{r}
+questao14 <- function(base){
+  
+  # Calculando para os primeiros dados
+  
+  fit <- arima0(x = base[1:988], order = c(0,1,1),seasonal = list(order = c(0,1,1), period = 12))
+  
+  # Valor dos coeficientes
+  
+  coeficientes <- fit$coef
+  
+  # variÃ¢ncia dos coeficientes
+  
+  variancia_coeficientes <- fit$var.coef
+  
+  #Padronizando
+  
+  z <- c()
+  
+  z[1] <- fit$coef[[1]]/sqrt(fit$var.coef[1,1])
+  z[2] <- fit$coef[[2]]/sqrt(fit$var.coef[2,2])
+  
+  
+  variaveis_padronizadas <- z
+  
+  # Calculando o P-valor
+  
+  pvalor <- 2*(1-pnorm(abs(z)))
+  
+  # Normalidade dos resÃ­duos
+  
+  residuos <- residuals(fit)
+  
+  teste_normalidade <- shapiro.test(residuals(fit))
+  
+  # IndependÃªncia para valores diferentes de lag
+  
+  box_lag6 <- Box.test(residuals(fit), lag = 6, fitdf = 2)
+  box_lag12 <- Box.test(residuals(fit), lag = 12, fitdf = 2)
+  box_lag24 <- Box.test(residuals(fit), lag = 24, fitdf = 2)
+  box_lag36 <- Box.test(residuals(fit), lag = 36, fitdf = 2)
+  
+  # Valores preditos
+  
+  preditos <- predict(fit,n.ahead = 12)
+  
+  # comparaÃ§Ã£o com os valores reais
+  
+  resultado <- list("Coeficientes" = coeficientes,
+                    "VariÃ¢ncia Coeficientes" = variancia_coeficientes, "ResÃ­duos" = residuos,
+                    "Variaveis Padronizadas" = variaveis_padronizadas,"P-valor VariÃ¡veis Padronizadas" = pvalor,
+                    "Teste de Normaliddade" = teste_normalidade, "Box Teste Lag 6" = box_lag6,
+                    "Box Teste Lag 12" = box_lag12,"Box Teste Lag 24" = box_lag24,"Box Teste Lag 36" = box_lag36,
+                    "PrevisÃ£o" = preditos)
+  
+}
+
+```
+
+dados
+```{r}
+base <- read.csv("series.csv")
+```
+
+
+serie 1
+```{r}
+serie1 <- questao14(base$V1)
+serie1$Coeficientes
+```
+
+```{r}
+serie1$`VariÃ¢ncia Coeficientes`
+```
+
+```{r}
+
+serie1$`Variaveis Padronizadas`
+```
+
+```{r}
+serie1$`P-valor VariÃ¡veis Padronizadas`
+```
+
+```{r}
+serie1$`Teste de Normaliddade`
+plot(serie1$`ResÃ­duos`)
+```
+
+```{r}
+serie1$`Box Teste Lag 6`
+serie1$`Box Teste Lag 12`
+serie1$`Box Teste Lag 24`
+serie1$`Box Teste Lag 36`
+```
+
+```{r}
+serie1$`PrevisÃ£o`
+
+```

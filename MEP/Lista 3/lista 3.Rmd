@@ -1,0 +1,28 @@
+---
+title: "Lista 4"
+output: html_document
+---
+Questao 10 c
+```{r}
+zts <- c(0.66,0.57,0.66,-1.47,-1.38,-1.9,-0.7)
+
+fit <- arima0(x = zts, order = c(1,1,0))
+fit
+```
+Previsao 1 a 4
+```{r}
+
+pred <- predict(fit,n.ahead = 4)
+pred
+```
+
+
+Intervalo de ConfianÃ§a da Previsao
+```{r}
+ic_y8 <- c(pred$pred[1] - qnorm(0.975)*pred$se[1],pred$pred[1] + qnorm(0.975)*pred$se[1])
+ic_y9 <- c(pred$pred[2] - qnorm(0.975)*pred$se[2],pred$pred[2] + qnorm(0.975)*pred$se[2])
+
+ic_y8
+ic_y9
+```
+
