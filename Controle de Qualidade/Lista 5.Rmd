@@ -1,0 +1,118 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+
+Lista 5
+
+```{r}
+EWMA <- function(M0 , Sig0 , Lamb , K , X , D){
+  Y <- c()
+  Y[1] <- lamb * X[1] + (1 - lamb) * M0
+
+for (i in 2:length(X)) {
+  Y[i] <- lamb * X[i] + (1 - lamb) * Y[i - 1]
+}
+
+expo <- 2*observacao
+
+b <- 1 - (1 - lamb)^expo
+a <- Sig0^2 * lamb/(2-lamb)
+
+sig2yi <- a*b
+
+
+LSC <- M0 + k * sqrt(sig2yi)
+LIC <- M0 - k * sqrt(sig2yi)
+
+Resul <- list("Yi" = Y , "Sig2yi" = sig2yi , "LSC" = LSC , "LIC" = LIC)
+
+return(Resul)
+
+}
+
+CUSUM <- function(M0 , X  , Sig0 , K, D){
+  Sj <- X - M0
+  Si <- c()
+  SiM <- c()
+  Sim <- c()
+  NiM <- rep(0 ,length(X))
+  Nim <- rep(0 ,length(X))
+  Si[1] <- Sj[1]
+  LIC <- -K * Sig0
+  LSC <- K * Sig0
+  obs <- seq(1:length(X))
+  
+  SiM[1] <- max(0,X[1]-(M0+D))
+  Sim[1] <- max(0,(M0-D)-X[1])
+  
+  if(SiM == 0 ){NiM[1] <- 0} else{NiM[1] <- 1}
+  if(Sim == 0 ){Nim[1] <- 0} else{Nim[1] <- 1}
+  
+  for (i in 2:length(X)) {
+    Si[i] <- Si[i-1]+Sj[i]
+    
+    SiM[i] <- max(0,X[i]-(M0+D)+SiM[i - 1])
+    Sim[i] <- max(0,(M0-D)-X[i]+Sim[i - 1])
+    
+    if(SiM[i] == 0 ){ NiM[i] <- 0 } else{ NiM[i] <- NiM[i - 1] + 1 }
+    if(Sim[i] == 0 ){ Nim[i] <- 0 } else{ Nim[i] <- Nim[i - 1] + 1 }
+  }
+  
+  
+  
+  tabela <- data.frame(obs , X , X - (M0+D), SiM, NiM , (M0-D)-X , Sim , Nim)
+  colnames(tabela) <- c("obs"  , "X" , "X - (M0+D)"  , "SiM"  , "NiM"  , "(M0-D)-X "  , "Sim"  , "Nim")
+  
+  
+  resul <- list("Tabela" = tabela , "LIC" = LIC , "LCS" = LSC)
+  return(resul)
+}
+
+
+```
+
+
+
+Questao 1
+```{r}
+m0 <- 20
+sig0 <- 1
+lamb <- 0.2
+k <- 2.8
+
+observacao <- seq(1:15)
+xi <- c(18.7 , 20 , 21 , 21.6 , 18.1 , 20.8 , 18.4 , 19.4 , 16.6 , 19.1 , 18.6 , 17.4 , 18.2 , 17.5 , 19)
+
+resultado1 <- EWMA(m0,sig0,lamb,k,xi)
+resultado1
+plot(resultado1$Yi)
+plot(xi)
+
+```
+sim Yi comeca crescendo e apos a observacai 5 o  mesmo decai e parece q passa a oscilar em torno de 18.5, entretanto mais dados permitiriam visualizar melhor se esse valor e verdadeiro
+
+
+Qestao 2
+```{r}
+fi <- 0.5
+d <- fi*sig0
+k <- 5
+
+
+resultado2 <- CUSUM(M0 = m0 , X = xi , Sig0 = sig0 , K = k , D = d )
+resultado2$Tabela
+
+##plot(resultado2$Si)
+cbind(observacao,resultado2$Tabela$SiM > k , resultado2$Tabela$Sim > k)
+
+#Instalnte de alteracao
+11-resultado2$Tabela$Nim[11]
+
+#Estimativa de maggnitude de deslocamento da media
+-d - resultado2$Tabela$Sim[11]/resultado2$Tabela$Nim[11]
+
+```
+
