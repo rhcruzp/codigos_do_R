@@ -153,7 +153,7 @@ GNC <- function(dados,m,ta){
   b <- c()
   d1 <- c()
   d2 <- c()
-  LM <- mean(dados)*ta
+  LM <- round(mean(dados),3)
   LSC <- round(LM  + 3 * sqrt(LM),2)
   if(LM  - 3 * sqrt(LM)>0){LIC <- round(LM  - 3 * sqrt(LM),2)}else(LIC <- 0)
   limites <- cbind(LIC,LM,LSC)
@@ -352,7 +352,7 @@ limites
 #Questao 8
 ```{r}
 amostra8 <- seq(1:10)
-metros <- c(8,11,9,10,10,7,10,12,1,10.5)*1000
+metros <- c(8,11,9,10,10,7,10,12,14,10.5)*1000
 defeitos <- c(7,9,5,7,9,13,6,10,11,12)
 p <- defeitos/10000
 p2 <- defeitos/metros
@@ -361,13 +361,20 @@ m <- 10
 ```
 ##a)
 ```{r}
-GNC(defeitos,m,ta)$`Limites de Controle`
+GNC(defeitos,metros[9],ta)$`Limites de Controle`
 GNC(defeitos,m,ta)$status
 ```
 ##b)
 ```{r}
-u <- sum(defeitos)/(ta * m)
-u
+a <- sum(metros)/10000
+u <- sum(defeitos)/a
+round(u,2)
+```
+##c)
+```{r}
+a <- sum(metros)/2500
+u <- sum(defeitos)/a
+GNC(u,10,2500)
+
 ```
 
-##c)
